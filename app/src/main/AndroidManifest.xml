@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.lifecycle">
+
+    <application
+        android:name=".application.LifecycleApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="LifeCycle"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <service android:name=".service.LifecycleBackgroundService" />
+        <activity android:name=".view.LifecycleMainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <receiver android:name=".receiver.LifecycleReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="com.lifecycle.receiver.filter1"/>
+                <action android:name="com.lifecycle.receiver.filter2" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>
