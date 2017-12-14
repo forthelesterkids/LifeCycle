@@ -10,6 +10,9 @@ import android.os.Message;
 import com.lifecycle.application.LifecycleApplication;
 import com.lifecycle.model.LifecycleModelClass;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class LifecycleBackgroundService extends Service {
     private static final String TAG = "LifecycleBackground";
     private final IBinder mBinder = new LifecycleBinder();
@@ -38,8 +41,8 @@ public class LifecycleBackgroundService extends Service {
 
     public void searchInternet(Handler handler) {
         LifeCycleRunnable runnable = new LifeCycleRunnable(handler);
-        Thread t = new Thread(runnable);
-        t.start();
+        ExecutorService execService = Executors.newFixedThreadPool(5);
+        execService.execute(runnable);
     }
 
     class LifeCycleRunnable implements Runnable {

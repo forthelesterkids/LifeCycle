@@ -30,6 +30,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
+
 public class LifecycleMainActivity extends AppCompatActivity implements LifecycleCallback{
 
     private Button button;
@@ -47,11 +49,6 @@ public class LifecycleMainActivity extends AppCompatActivity implements Lifecycl
             LifecycleBackgroundService.LifecycleBinder binder = (LifecycleBackgroundService.LifecycleBinder) service;
             mService = binder.getService();
             mBound = true;
-            if(mService != null){
-                Log.i("service-bind", "Service is bonded successfully!");
-
-                //do whatever you want to do after successful binding
-            }
         }
 
         @Override
@@ -65,6 +62,15 @@ public class LifecycleMainActivity extends AppCompatActivity implements Lifecycl
         public void handleMessage(Message msg) {
             LifecycleApplication.addToMap(TAG, "public void handleMessage(Message msg)" + msg.toString());
             LifecycleApplication.spillLogs();
+            ArrayList<String> string = new ArrayList<>();
+            ArrayList<String> two = string;
+            two = new ArrayList<>();
+            if(string == two){
+            Log.i("TAG", "string == two");
+            }
+            if(string.equals(two)){
+                Log.i("TAG", "string.equals(two)");
+            }
         }
     };
 
