@@ -10,7 +10,6 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -29,8 +28,6 @@ import com.lifecycle.service.LifecycleBackgroundService;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.ArrayList;
 
 public class LifecycleMainActivity extends AppCompatActivity implements LifecycleCallback{
 
@@ -62,15 +59,6 @@ public class LifecycleMainActivity extends AppCompatActivity implements Lifecycl
         public void handleMessage(Message msg) {
             LifecycleApplication.addToMap(TAG, "public void handleMessage(Message msg)" + msg.toString());
             LifecycleApplication.spillLogs();
-            ArrayList<String> string = new ArrayList<>();
-            ArrayList<String> two = string;
-            two = new ArrayList<>();
-            if(string == two){
-            Log.i("TAG", "string == two");
-            }
-            if(string.equals(two)){
-                Log.i("TAG", "string.equals(two)");
-            }
         }
     };
 
