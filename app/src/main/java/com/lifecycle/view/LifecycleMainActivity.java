@@ -5,8 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -29,7 +33,7 @@ import org.greenrobot.eventbus.ThreadMode;
 public class LifecycleMainActivity extends AppCompatActivity implements LifecycleCallback{
 
     private Button button;
-    private LifecycleBackgroundService mService;
+    private LifecycleBackgroundService mService = new LifecycleBackgroundService();
     private boolean mBound = false;
     private static final String TAG = "LifecycleMainActivity";
     private EventBus eventBus = EventBus.getDefault();
@@ -43,11 +47,24 @@ public class LifecycleMainActivity extends AppCompatActivity implements Lifecycl
             LifecycleBackgroundService.LifecycleBinder binder = (LifecycleBackgroundService.LifecycleBinder) service;
             mService = binder.getService();
             mBound = true;
+            if(mService != null){
+                Log.i("service-bind", "Service is bonded successfully!");
+
+                //do whatever you want to do after successful binding
+            }
         }
 
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
             mBound = false;
+        }
+    };
+
+    final Handler handler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            LifecycleApplication.addToMap(TAG, "public void handleMessage(Message msg)" + msg.toString());
+            LifecycleApplication.spillLogs();
         }
     };
 
@@ -117,7 +134,6 @@ public class LifecycleMainActivity extends AppCompatActivity implements Lifecycl
         button = (Button)findViewById(R.id.button);
         addListeners();
         eventBusContext = new EventBusContext(eventBus);
-        eventBusContext.register(this);
         new LifeCycleAsyncTask(this, eventBusContext).execute("LifeCycleAsyncTask async running");
         publishMessages();
     }
@@ -140,6 +156,10 @@ public class LifecycleMainActivity extends AppCompatActivity implements Lifecycl
     @Override
     public void onResume(){
         super.onResume();
+        Intent intent = new Intent(this, LifecycleBackgroundService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        mService.searchInternet(handler);
+        eventBusContext.register(this);
         LifecycleApplication.addToMap(TAG, "public void onResume()");
     }
 
@@ -147,8 +167,6 @@ public class LifecycleMainActivity extends AppCompatActivity implements Lifecycl
     public void onStart(){
         super.onStart();
         LifecycleApplication.addToMap(TAG, "public void onStart()");
-        Intent intent = new Intent(this, LifecycleBackgroundService.class);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
